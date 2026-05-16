@@ -1,5 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
+    /* Equipo 6: 
+    Rios Cristobal María del Rosario
+    Rivera Mariscal Pablo Itzult
+    Rodríguez González Daniel Alejandro
+    Velázquez Vázquez Valeria
+    Villanueva Armento Alison Naomi
+*/ 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -133,8 +140,8 @@
         };
 
         try {
-            // CORRECCIÓN: Cambiado de puerto 3000 a 4000 para que coincida con tu servidor
-            const res = await fetch('http://localhost:4000/registrar-profesor', {
+            // CORRECCIÓN: Cambiado de puerto 3000 a 5432 para que coincida con tu servidor
+            const res = await fetch('http://localhost:5432/registrar-profesor', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(profesor)
@@ -144,7 +151,7 @@
             if(result.success) e.target.reset(); 
         } catch (err) {
             // Este error sale si el servidor de Node no está encendido
-            alert("⚠️ Error: El servidor no responde. Verifica que Node esté corriendo en el puerto 4000.");
+            alert("⚠️ Error: El servidor no responde. Verifica que Node esté corriendo en el puerto 5432.");
         }
     });
 
@@ -153,7 +160,7 @@
         try {
             
             
-            const res = await fetch('http://localhost:4000/consultar-profesores');
+            const res = await fetch('http://localhost:5432/consultar-profesores');
             const result = await res.json();
 
             if (result.success) {

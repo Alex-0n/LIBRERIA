@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="es">
-    /* Equipo 6: 
+/* Equipo 6: 
     Rios Cristobal María del Rosario
     Rivera Mariscal Pablo Itzult
     Rodríguez González Daniel Alejandro
     Velázquez Vázquez Valeria
     Villanueva Armento Alison Naomi
 */ 
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OptiSearch - LIBROS</title>
+    <title>OptiSearch - PRESTAMOS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="diseño/libros.css">
+    <link rel="stylesheet" href="diseño/prestamos.css">
 </head>
 <body style="background-color: #f4f7f6;">
 
@@ -30,7 +31,7 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="list-group shadow-sm">
-                    <div class="list-group-item bg-dark text-white fw-bold text-center">LIBROS</div>
+                    <div class="list-group-item bg-dark text-white fw-bold text-center">PRESTAMOS</div>
                     <button class="list-group-item list-group-item-action active"><i class="bi bi-person-plus"></i> Registrar</button>
                     <button class="list-group-item list-group-item-action"><i class="bi bi-search"></i> Consulta Individual</button>
                     <button class="list-group-item list-group-item-action" onclick="consultarGeneral()"><i class="bi bi-table"></i> Consulta General</button>
@@ -43,51 +44,53 @@
                 
                 <div class="imagen-fondo" style="margin-bottom: 20px; border-radius: 10px;"></div>
 
-                <h2 class="mb-4 text-primary">Alta de Nuevo Libro</h2>
+                <h2 class="mb-4 text-primary">Alta de Nuevo Préstamo</h2>
 
-                <form id="alumnoForm" class="row g-3">
+                <form id="prestamoForm" class="row g-3">
                     <div class="col-md-3">
-                        <label class="form-label fw-bold">ISBN</label>
-                        <input type="text" id="ISBN" class="form-control" placeholder="Ej: 153954" required>
+                        <label class="form-label fw-bold">ID del prestamo</label>
+                        <input type="text" id="id_prestamo" class="form-control" placeholder="Ej: 22-89" required>
                     </div>
-                    <div class="col-md-9">
-                        <label class="form-label fw-bold">Titulo</label>
-                        <input type="text" id="titulo" class="form-control" required>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold">Editorial</label>
-                        <input type="text" id="editorial" class="form-control" required>
-                    </div>
-                    <div class="col-md-9">
-                        <label class="form-label fw-bold">Autores</label>
-                        <input type="text" id="autores" class="form-control" required>
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold">Estatus</label>
+                        <input type="text" id="estatus" class="form-control" required>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label fw-bold">Fecha de Publicacion</label>
-                        <input type="date" id="anio_public" class="form-control" required>
+                        <label class="form-label fw-bold">Fecha de Préstamo</label>
+                        <input type="date" id="fecha_pres" class="form-control" required>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label fw-bold">Numero de ejemplar</label>
-                        <input type="text" id="num_ejemplar" class="form-control" required>
+                        <label class="form-label fw-bold">Fecha Limite</label>
+                        <input type="date" id="fecha_lim" class="form-control" required>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label fw-bold">Libro</label>
+                        <input type="text" id="libro" class="form-control" required>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label fw-bold">Solicitante</label>
+                        <input type="text" id="solicitante" class="form-control">
                     </div>
                     <div class="col-12 mt-4">
                         <button type="submit" class="btn btn-primary px-5 fw-bold">GUARDAR EN BASE DE DATOS</button>
                         <button type="button" class="btn btn-danger px-4 ms-2" onclick="location.href='index.html'">SALIR</button>
                     </div>
                 </form>
+
                 <div id="seccionTabla" class="mt-5" style="display:none;">
                     <h3 class="text-primary">Registros Actuales</h3>
                     <div class="table-responsive">
                         <table class="table table-hover border mt-3">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>Código</th>
-                                    <th>Titulo</th>
-                                    <th>Correo</th>
-                                    <th>Editorial</th>
-                                    <th>Autores</th>
-                                    <th>Fecha de Publicacion</th>
-                                    <th>Numero de Ejemplar</th>
+                                    <th>id_prestamo</th>
+                                    <th>Estatus</th>
+                                    <th>libro</th>
+                                    <th>solicitante</th>
+                                    <th>Multa</th>
+                                    <th>Fecha de Préstamo</th>
+                                    <th>Fecha Límite</th>
+                                    <th>Fecha devolución</th>
                                 </tr>
                             </thead>
                             <tbody id="cuerpoTabla"></tbody>
@@ -100,24 +103,25 @@
 
     <script>
     // --- 1. FUNCIÓN DE REGISTRO (POST) ---
-    document.getElementById('libroForm').addEventListener('submit', async (e) => {
+    document.getElementById('prestamoForm').addEventListener('submit', async (e) => {
         e.preventDefault(); 
 
-        const libro = {
-            ISBN: document.getElementById('ISBN').value,
-            titulo: document.getElementById('titulo').value,
-            editorial: document.getElementById('editorial').value,
-            autores: document.getElementById('autores').value,
-            anio_public: document.getElementById('anio_public').value,
-            num_ejemplar: document.getElementById('num_ejemplar').value,
+        const prestamo = {
+            id_prestamo: document.getElementById('id_prestamo').value,
+            estatus: document.getElementById('estatus').value,
+            libro: document.getElementById('libro').value,
+            solicitante: document.getElementById('solicitante').value,
+            multa: document.getElementById('multa').value,
+            fecha_pres: document.getElementById('fecha_pres').value,
+            fecha_lim: document.getElementById('fecha_lim').value,
         };
 
         try {
             // CORRECCIÓN: Cambiado de puerto 3000 a 5432 para que coincida con tu servidor
-            const res = await fetch('http://localhost:5432/registrar-libro', {
+            const res = await fetch('http://localhost:5432/registrar-prestamo', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(libro)
+                body: JSON.stringify(prestamo)
             });
             const result = await res.json();
             alert(result.mensaje); 
@@ -133,7 +137,7 @@
         try {
             
             
-            const res = await fetch('http://localhost:5432/consultar-libros');
+            const res = await fetch('http://localhost:5432/consultar-prestamos');
             const result = await res.json();
 
             if (result.success) {
@@ -142,17 +146,18 @@
                 
                 result.datos.forEach(a => {
                     // fechaformatocorto
-const fechaLimpia = new Date(a.anio_public).toLocaleDateString('es-MX');
+const fechaLimpia = new Date(a.fecha_nac).toLocaleDateString('es-MX');
 
                     tabla.innerHTML += `
                         <tr>
-                            <td class="fw-bold">${a.ISBN}</td>
-                            <td>${a.titulo}</td>
-                            <td>${a.editorial}</td>
-                            <td>${a.autores}</td>
-                            <td>${fechaLimpia}</td>
-                            <td>${a.num_ejemplar}</td>
-                            
+                            <td class="fw-bold">${a.id_prestamo}</td>
+                            <td>${a.estatus}</td>
+                            <td>${a.libro}</td>
+                            <td>${a.solicitante}</td>
+                            <td>${a.multa}</td>
+                            <td>${a.fecha_pres}</td>
+                            <td>${a.fecha_lim}</td>
+                            <td>${a.fecha_dev}</td>
                         </tr>`;
                 });
                 document.getElementById('seccionTabla').style.display = "block";

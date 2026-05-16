@@ -7,15 +7,15 @@ const pool = new Pool({
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
-  // ❌ ELIMINAMOS LA PARTE DE SSL PORQUE TU SERVIDOR NO LA SOPORTA
+  // ELIMINAMOS LA PARTE DE SSL PORQUE TU SERVIDOR NO LA SOPORTA
 });
 
 // Prueba de conexión
 pool.connect((err, client, release) => {
   if (err) {
-    console.error('❌ ERROR DE CONEXIÓN:', err.message);
+    console.error('ERROR DE CONEXIÓN:', err.message);
   } else {
-    console.log('✅ CONEXIÓN EXITOSA A LA BASE DE DATOS');
+    console.log('CONEXIÓN EXITOSA A LA BASE DE DATOS');
     release();
   }
 });

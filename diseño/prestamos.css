@@ -6,7 +6,8 @@
     Rodríguez González Daniel Alejandro
     Velázquez Vázquez Valeria
     Villanueva Armento Alison Naomi
-*/  
+*/ 
+
 body {
     background-color: #f8f9fa;
     margin: 0;
@@ -55,7 +56,7 @@ body {
   height: 300px;
     width: 100%;
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
-  url("../lib-imagenes/wmremove-transformed.png");
+  url("../lib-imagenes/prestamo.jpg");
   background-size: cover;
   background-position: center;
 }

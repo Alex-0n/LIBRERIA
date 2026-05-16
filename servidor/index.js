@@ -219,6 +219,6 @@ app.get('/consultar-profesores', async (req, res) => {
     }
 });
 
-app.listen(4000, '0.0.0.0', () => {
-    console.log(`🚀 Servidor corriendo: http://localhost:4000`);
+app.listen(5432, '0.0.0.0', () => {
+    console.log(`🚀 Servidor corriendo: http://localhost:5432`);
 });
