@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OptiSearch - LIBROS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="diseño/libros.css">
+</head>
+<body style="background-color: #f4f7f6;">
+
+    <nav style="background-color: #1a252f; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #f39c12;">
+        <div style="font-size: 1.6rem; font-weight: bold; display: flex; align-items: center; gap: 12px;">
+            <i class="bi bi-book-half"></i> <span>OptiSearch</span>
+        </div>
+        <div>
+            <span style="background-color: #e74c3c; padding: 6px 16px; border-radius: 4px; font-weight: 600; text-transform: uppercase; font-size: 0.85rem;">Administrador</span>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="list-group shadow-sm">
+                    <div class="list-group-item bg-dark text-white fw-bold text-center">LIBROS</div>
+                    <button class="list-group-item list-group-item-action active"><i class="bi bi-person-plus"></i> Registrar</button>
+                    <button class="list-group-item list-group-item-action"><i class="bi bi-search"></i> Consulta Individual</button>
+                    <button class="list-group-item list-group-item-action" onclick="consultarGeneral()"><i class="bi bi-table"></i> Consulta General</button>
+                    <button class="list-group-item list-group-item-action"><i class="bi bi-pencil-square"></i> Cambiar y Eliminar</button>
+                </div>
+                <button class="btn btn-success w-100 mt-3 fw-bold" onclick="location.href='biblioteca.html'">REGRESAR</button>
+            </div>
+
+            <div class="col-md-9" style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                
+                <div class="imagen-fondo" style="margin-bottom: 20px; border-radius: 10px;"></div>
+
+                <h2 class="mb-4 text-primary">Alta de Nuevo Libro</h2>
+
+                <form id="alumnoForm" class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">ISBN</label>
+                        <input type="text" id="ISBN" class="form-control" placeholder="Ej: 153954" required>
+                    </div>
+                    <div class="col-md-9">
+                        <label class="form-label fw-bold">Titulo</label>
+                        <input type="text" id="titulo" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Editorial</label>
+                        <input type="text" id="editorial" class="form-control" required>
+                    </div>
+                    <div class="col-md-9">
+                        <label class="form-label fw-bold">Autores</label>
+                        <input type="text" id="autores" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Fecha de Publicacion</label>
+                        <input type="date" id="anio_public" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Numero de ejemplar</label>
+                        <input type="text" id="num_ejemplar" class="form-control" required>
+                    </div>
+                    <div class="col-12 mt-4">
+                        <button type="submit" class="btn btn-primary px-5 fw-bold">GUARDAR EN BASE DE DATOS</button>
+                        <button type="button" class="btn btn-danger px-4 ms-2" onclick="location.href='index.html'">SALIR</button>
+                    </div>
+                </form>
+                <div id="seccionTabla" class="mt-5" style="display:none;">
+                    <h3 class="text-primary">Registros Actuales</h3>
+                    <div class="table-responsive">
+                        <table class="table table-hover border mt-3">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Titulo</th>
+                                    <th>Correo</th>
+                                    <th>Editorial</th>
+                                    <th>Autores</th>
+                                    <th>Fecha de Publicacion</th>
+                                    <th>Numero de Ejemplar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cuerpoTabla"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // --- 1. FUNCIÓN DE REGISTRO (POST) ---
+    document.getElementById('libroForm').addEventListener('submit', async (e) => {
+        e.preventDefault(); 
+
+        const libro = {
+            ISBN: document.getElementById('ISBN').value,
+            titulo: document.getElementById('titulo').value,
+            editorial: document.getElementById('editorial').value,
+            autores: document.getElementById('autores').value,
+            anio_public: document.getElementById('anio_public').value,
+            num_ejemplar: document.getElementById('num_ejemplar').value,
+        };
+
+        try {
+            // CORRECCIÓN: Cambiado de puerto 3000 a 4000 para que coincida con tu servidor
+            const res = await fetch('http://localhost:4000/registrar-libro', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(libro)
+            });
+            const result = await res.json();
+            alert(result.mensaje); 
+            if(result.success) e.target.reset(); 
+        } catch (err) {
+            // Este error sale si el servidor de Node no está encendido
+            alert("⚠️ Error: El servidor no responde. Verifica que Node esté corriendo en el puerto 4000.");
+        }
+    });
+
+    // --- 2. FUNCIÓN DE CONSULTA GENERAL (GET) ---
+    async function consultarGeneral() {
+        try {
+            
+            
+            const res = await fetch('http://localhost:4000/consultar-libros');
+            const result = await res.json();
+
+            if (result.success) {
+                const tabla = document.getElementById('cuerpoTabla');
+                tabla.innerHTML = ""; 
+                
+                result.datos.forEach(a => {
+                    // fechaformatocorto
+const fechaLimpia = new Date(a.anio_public).toLocaleDateString('es-MX');
+
+                    tabla.innerHTML += `
+                        <tr>
+                            <td class="fw-bold">${a.ISBN}</td>
+                            <td>${a.titulo}</td>
+                            <td>${a.editorial}</td>
+                            <td>${a.autores}</td>
+                            <td>${fechaLimpia}</td>
+                            <td>${a.num_ejemplar}</td>
+                            
+                        </tr>`;
+                });
+                document.getElementById('seccionTabla').style.display = "block";
+            }
+        } catch (err) {
+            alert("Error al conectar con la base de datos para la consulta.");
+        }
+    }
+</script>
+</body>
+</html>
