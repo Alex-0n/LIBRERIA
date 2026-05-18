@@ -111,6 +111,9 @@
                                     <th>Sexo</th>
                                     <th>Fecha de Nacimiento</th>
                                     
+
+                    
+                            
                                     
                                 </tr>
                             </thead>
@@ -176,12 +179,13 @@ const fechaLimpia = new Date(a.fecha_nac).toLocaleDateString('es-MX');
                         <tr>
                             <td class="fw-bold">${a.codigo}</td>
                             <td>${a.nombre} ${a.apellido1} ${a.apellido2 || ''}</td>
-                            <td>${a.carrera}</td>
+                            <td>${a.departamento}</td>
                             <td>${a.correo}</td>
                             <td>${a.direccion}</td>
                             <td>${a.telefono}</td>
                             <td class="text-center">${a.sexo}</td>
                             <td>${fechaLimpia}</td>
+
                             
                         </tr>`;
                 });
